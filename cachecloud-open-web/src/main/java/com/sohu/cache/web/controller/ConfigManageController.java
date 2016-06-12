@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sohu.cache.entity.AppUser;
 import com.sohu.cache.entity.SystemConfig;
 import com.sohu.cache.web.enums.SuccessEnum;
 import com.sohu.cache.web.service.ConfigService;
@@ -61,6 +62,8 @@ public class ConfigManageController extends BaseController {
      */
     @RequestMapping(value = "/update")
     public ModelAndView update(HttpServletRequest request, HttpServletResponse response, Model model) {
+        AppUser appUser = getUserInfo(request);
+        logger.warn("user {} want to change config!", appUser.getName());
         SuccessEnum successEnum;
         try {
             Map<String, String> configMap = new HashMap<String, String>();
@@ -76,10 +79,14 @@ public class ConfigManageController extends BaseController {
                 logger.error("params {} may be empty!!", paramMap);
             }
             successEnum = configService.updateConfig(configMap);
+            if (successEnum.equals(SuccessEnum.SUCCESS)) {
+                configService.reloadSystemConfig();
+            }
         } catch (Exception e) {
             successEnum = SuccessEnum.FAIL;
             logger.error(e.getMessage(), e);
         }
+        logger.warn("user {} change config result is {}!", appUser.getName(), successEnum.value());
         return new ModelAndView("redirect:/manage/config/init?success=" + successEnum.value());
 
     }
