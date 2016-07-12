@@ -168,7 +168,6 @@ public class ImportAppCenterImpl implements ImportAppCenter {
                     }
                     //deploy quartz
                     redisCenter.deployRedisCollection(appId, host, port);
-                    redisCenter.deployRedisSlowLogCollection(appId, host, port);
                 }
             }
 

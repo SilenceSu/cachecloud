@@ -13,11 +13,6 @@ import com.sohu.cache.web.enums.SuccessEnum;
  * @Time 上午10:35:04
  */
 public interface ConfigService {
-    
-    /**
-     * 加载配置
-     */
-    public void reloadSystemConfig();
 
     /**
      * 更新配置
